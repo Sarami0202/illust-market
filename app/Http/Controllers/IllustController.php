@@ -48,7 +48,7 @@ class IllustController extends Controller
         return $this->JsonResponse(Download::leftJoin('illusts', 'illusts.id', '=', 'downloads.illust')
             ->select(DB::raw('illusts.illust, illusts.name, illusts.id,count(*) as count'))
             ->where('created_at', '>=', date("Y-m-d H:i:s", strtotime('-' . $date . 'day')))
-            ->groupBy('illusts.id')
+            ->groupBy('illusts.id', 'illusts.illust', 'illusts.name')
             ->orderBy('count', 'desc')
             ->limit($num)
             ->get());
