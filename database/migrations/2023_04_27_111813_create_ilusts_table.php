@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->text('illust');
             $table->text('name');            
+            $table->text('prompt');         
+            $table->text('negative');         
+            $table->text('seed');            
             $table->text('alt')->nullable();
         });
     }

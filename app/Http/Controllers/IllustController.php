@@ -76,6 +76,9 @@ class IllustController extends Controller
             'illust' => $illust,
             'name' => $request->name,
             'alt' => $request->alt,
+            'prompt' => $request->prompt,
+            'negative' => $request->negative,
+            'seed' => $request->seed,
         ]);
         return response()->json(['id' => $id], 200);
     }
@@ -96,6 +99,9 @@ class IllustController extends Controller
         Illust::where('id', $id)->update([
             'name' => $request->name,
             'alt' => $request->alt,
+            'prompt' => $request->prompt,
+            'negative' => $request->negative,
+            'seed' => $request->seed,
         ]);
         Illust_Category::where('illust', $id)->delete();
         Illust_Tags::where('illust', $id)->delete();
@@ -108,7 +114,7 @@ class IllustController extends Controller
     {
         $category = Illust::find($id);
         $category->delete();
-        Illust_Category::where('illust',$id)->delete();
-        Illust_Tags::where('illust',$id)->delete();
+        Illust_Category::where('illust', $id)->delete();
+        Illust_Tags::where('illust', $id)->delete();
     }
 }
