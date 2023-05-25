@@ -26,16 +26,35 @@ class IllustController extends Controller
 
     public function getIllust($name, $num, $page)
     {
+
         if ($num == 0)
             return $this->JsonResponse(Illust::Where('name', 'like', '%' . $name . '%')
                 ->orderBy('id', 'desc')
                 ->get());
-        else
-            return $this->JsonResponse(Illust::Where('name', 'like', '%' . $name . '%')
-                ->orderBy('id', 'desc')
-                ->offset($num * ($page - 1))
-                ->limit($num)
-                ->get());
+        else {
+            $keywords = explode(' ', $name);
+            $I_query = Illust::query(); //名前のみ
+            $T_query = Illust_Tags::query()->leftJoin('illusts', 'illusts.id', '=', 'illust__tags.illust'); //タグのみ
+            $IT_query = Illust::query(); //名前とタグのみ
+            foreach ($keywords as $keyword) {
+                $I_query->where('illusts.name', 'like', '%' . $keyword . '%');
+                $T_query->orWhere('tags', $keyword);
+                $IT_query->orWhere('illusts.name', 'like', '%' . $keyword . '%');
+            }
+            $T_query->select('id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt');
+
+            $IT_query->joinSub($T_query, 't', function ($join) {
+                $join->on('illusts.id', '=', 't.id');
+            })->select('illusts.id', 'illusts.illust', 't.name', 't.prompt', 't.negative', 't.seed', 't.alt')
+                ->groupBy('illusts.id', 'illusts.illust', 't.name', 't.prompt', 't.negative', 't.seed', 't.alt');
+
+            $T_query->groupBy('id', 'illusts.illust', 'name', 'prompt', 'negative', 'seed', 'alt')
+                ->havingRaw('COUNT(DISTINCT tags) = ' . count($keywords));
+
+            $query = $I_query->union($T_query)->union($IT_query);
+            return $this->JsonResponse($query->get());
+        }
+        ;
     }
     public function Count($name)
     {
