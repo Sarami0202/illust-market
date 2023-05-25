@@ -12,13 +12,19 @@ class IllustTagsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function getTags($id)
+    public function getIllustTags($id)
     {
         if ($id == "all")
             return $this->JsonResponse(Illust_Tags::all());
         else
             return $this->JsonResponse(Illust_Tags::where('illust', $id)->get());
     }
+
+    public function getTags()
+    {
+        return $this->JsonResponse(Illust_Tags::select('tags')->groupBy('tags')->get());
+    }
+
 
     public function getIllust($tag, $num, $page)
     {

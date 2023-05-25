@@ -31,7 +31,8 @@ Route::get('/category_illust/{id?}/{num?}/{page?}', 'App\Http\Controllers\Illust
 Route::get('/category_illust_count/{id?}', 'App\Http\Controllers\IllustCategoryController@Count');
 Route::post('/illust_category', 'App\Http\Controllers\IllustCategoryController@store');
 
-Route::get('/illust_tags/{id?}', 'App\Http\Controllers\IllustTagsController@getTags');
+Route::get('/illust_tags/{id?}', 'App\Http\Controllers\IllustTagsController@getIllustTags');
+Route::get('/tags', 'App\Http\Controllers\IllustTagsController@getTags');
 Route::get('/tags_illust/{tag?}/{num?}/{page?}', 'App\Http\Controllers\IllustTagsController@getIllust');
 Route::get('/tags_illust_count/{tag?}', 'App\Http\Controllers\IllustTagsController@Count');
 Route::post('/illust_tags', 'App\Http\Controllers\IllustTagsController@store');
