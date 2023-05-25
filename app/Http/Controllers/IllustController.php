@@ -52,7 +52,10 @@ class IllustController extends Controller
                 ->havingRaw('COUNT(DISTINCT tags) = ' . count($keywords));
 
             $query = $I_query->union($T_query)->union($IT_query);
-            return $this->JsonResponse($query->get());
+            return $this->JsonResponse($query->orderBy('id', 'desc')
+                ->offset($num * ($page - 1))
+                ->limit($num)
+                ->get());
         }
         ;
     }
