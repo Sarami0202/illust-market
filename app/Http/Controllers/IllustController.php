@@ -32,7 +32,8 @@ class IllustController extends Controller
                 ->orderBy('id', 'desc')
                 ->get());
         else {
-            $keywords = explode(' ', $name);
+            $name = str_replace('　', ' ', $name); // 全角の空白文字を半角スペースに置換
+            $keywords = preg_split('/\s+/', $name); // 空白文字でキーワードを分割
             $I_query = Illust::query(); //名前のみ
             $T_query = Illust_Tags::query()->leftJoin('illusts', 'illusts.id', '=', 'illust__tags.illust'); //タグのみ
             $IT_query = Illust::query(); //名前とタグのみ
@@ -61,7 +62,30 @@ class IllustController extends Controller
     }
     public function Count($name)
     {
-        return $this->JsonResponse(Illust::Where('name', 'like', '%' . $name . '%')->count());
+        $name = str_replace('　', ' ', $name); // 全角の空白文字を半角スペースに置換
+        $keywords = preg_split('/\s+/', $name); // 空白文字でキーワードを分割
+        $I_query = Illust::query(); //名前のみ
+        $T_query = Illust_Tags::query()->leftJoin('illusts', 'illusts.id', '=', 'illust__tags.illust'); //タグのみ
+        $IT_query = Illust::query(); //名前とタグのみ
+        foreach ($keywords as $keyword) {
+            $I_query->where('illusts.name', 'like', '%' . $keyword . '%');
+            $T_query->orWhere('tags', $keyword);
+            $IT_query->orWhere('illusts.name', 'like', '%' . $keyword . '%');
+        }
+        $T_query->select('id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt');
+
+        $IT_query->joinSub($T_query, 't', function ($join) {
+            $join->on('illusts.id', '=', 't.id');
+        })->select('illusts.id', 'illusts.illust', 't.name', 't.prompt', 't.negative', 't.seed', 't.alt')
+            ->groupBy('illusts.id', 'illusts.illust', 't.name', 't.prompt', 't.negative', 't.seed', 't.alt');
+
+        $T_query->groupBy('id', 'illusts.illust', 'name', 'prompt', 'negative', 'seed', 'alt')
+            ->havingRaw('COUNT(DISTINCT tags) = ' . count($keywords));
+
+        $query = $I_query->union($T_query)->union($IT_query);
+        return $this->JsonResponse($query->orderBy('id', 'desc')
+            ->get()
+            ->count());
     }
 
 
