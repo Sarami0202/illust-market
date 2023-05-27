@@ -42,8 +42,7 @@ class IllustController extends Controller
             foreach ($keywords as $keyword) {
                 $I_query->where('illusts.name', 'like', '%' . $keyword . '%');
                 $T_query->orWhere('tags', $keyword);
-                $IT_query2->orWhere('tags', $keyword)
-                    ->where('illusts.name', 'not like', '%' . $keyword . '%');
+                $IT_query2->orWhere('tags', $keyword);
                 $IT_query1->orWhere('illusts.name', 'like', '%' . $keyword . '%');
             }
 
