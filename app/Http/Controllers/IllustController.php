@@ -24,6 +24,15 @@ class IllustController extends Controller
             return $this->JsonResponse(Illust::where('id', $id)->get());
     }
 
+
+    public function newIllust($num)
+    {
+        return $this->JsonResponse(Illust::select("*")
+            ->orderBy("id", "desc")
+            ->limit($num)
+            ->get());
+    }
+
     public function getIllust($name, $num, $page)
     {
 
