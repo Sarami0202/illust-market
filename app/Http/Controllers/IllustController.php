@@ -55,17 +55,17 @@ class IllustController extends Controller
                 $IT_query1->orWhere('illusts.name', 'like', '%' . $keyword . '%');
             }
 
-            $IT_query2->select('illusts.id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt')
-                ->groupBy('illusts.id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt')
+            $IT_query2->select('illusts.id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt', 'service')
+                ->groupBy('illusts.id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt', 'service')
                 ->havingRaw('COUNT(illusts.id) >= ' . (count($keywords) - 1));
 
             $IT_query1->joinSub($IT_query2, 't', function ($join) {
                 $join->on('illusts.id', '=', 't.id');
-            })->select('illusts.id', 'illusts.illust', 't.name', 't.prompt', 't.negative', 't.seed', 't.alt')
-                ->groupBy('illusts.id', 'illusts.illust', 't.name', 't.prompt', 't.negative', 't.seed', 't.alt');
+            })->select('illusts.id', 'illusts.illust', 't.name', 't.prompt', 't.negative', 't.seed', 't.alt', 't.service')
+                ->groupBy('illusts.id', 'illusts.illust', 't.name', 't.prompt', 't.negative', 't.seed', 't.alt', 't.service');
 
-            $T_query->select('illusts.id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt')
-                ->groupBy('illusts.id', 'illusts.illust', 'name', 'prompt', 'negative', 'seed', 'alt')
+            $T_query->select('illusts.id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt', 'service')
+                ->groupBy('illusts.id', 'illusts.illust', 'name', 'prompt', 'negative', 'seed', 'alt', 'service')
                 ->havingRaw('COUNT(DISTINCT tags) = ' . count($keywords));
 
             $query = $IT_query1->union($I_query)->union($T_query);
@@ -93,17 +93,17 @@ class IllustController extends Controller
             $IT_query1->orWhere('illusts.name', 'like', '%' . $keyword . '%');
         }
 
-        $IT_query2->select('illusts.id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt')
-            ->groupBy('illusts.id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt')
+        $IT_query2->select('illusts.id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt', 'service')
+            ->groupBy('illusts.id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt', 'service')
             ->havingRaw('COUNT(illusts.id) >= ' . (count($keywords) - 1));
 
         $IT_query1->joinSub($IT_query2, 't', function ($join) {
             $join->on('illusts.id', '=', 't.id');
-        })->select('illusts.id', 'illusts.illust', 't.name', 't.prompt', 't.negative', 't.seed', 't.alt')
-            ->groupBy('illusts.id', 'illusts.illust', 't.name', 't.prompt', 't.negative', 't.seed', 't.alt');
+        })->select('illusts.id', 'illusts.illust', 't.name', 't.prompt', 't.negative', 't.seed', 't.alt', 't.service')
+            ->groupBy('illusts.id', 'illusts.illust', 't.name', 't.prompt', 't.negative', 't.seed', 't.alt', 't.service');
 
-        $T_query->select('illusts.id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt')
-            ->groupBy('illusts.id', 'illusts.illust', 'name', 'prompt', 'negative', 'seed', 'alt')
+        $T_query->select('illusts.id', 'illusts.illust', 'illusts.name', 'prompt', 'negative', 'seed', 'alt', 'service')
+            ->groupBy('illusts.id', 'illusts.illust', 'name', 'prompt', 'negative', 'seed', 'alt', 'service')
             ->havingRaw('COUNT(DISTINCT tags) = ' . count($keywords));
 
         $query = $IT_query1->union($I_query)->union($T_query);
@@ -149,6 +149,7 @@ class IllustController extends Controller
             'prompt' => $request->prompt,
             'negative' => $request->negative,
             'seed' => $request->seed,
+            'service' => $request->service,
         ]);
         return response()->json(['id' => $id], 200);
     }
@@ -172,6 +173,7 @@ class IllustController extends Controller
             'prompt' => $request->prompt,
             'negative' => $request->negative,
             'seed' => $request->seed,
+            'service' => $request->service,
         ]);
         Illust_Category::where('illust', $id)->delete();
         Illust_Tags::where('illust', $id)->delete();
