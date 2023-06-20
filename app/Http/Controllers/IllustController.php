@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\create_date;
 use App\Models\Download;
 use App\Models\Illust;
 use App\Models\Illust_Category;
 use App\Models\Illust_Tags;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -126,7 +128,7 @@ class IllustController extends Controller
 
     public function connectIllust($category, $num)
     {
-        return $this->JsonResponse(Illust_Category::leftJoin('illusts', 'illusts.id', '=', 'illust__categories.illust')
+        return $this->JsonResponse(Illust_Category::leftJoinF('illusts', 'illusts.id', '=', 'illust__categories.illust')
             ->Where('category', $category)
             ->orderBy('id', 'desc')
             ->limit($num)
@@ -150,6 +152,10 @@ class IllustController extends Controller
             'negative' => $request->negative,
             'seed' => $request->seed,
             'service' => $request->service,
+        ]);
+        create_date::insert([
+            'id' => $id,
+            'created_at'=>Carbon::now()
         ]);
         return response()->json(['id' => $id], 200);
     }
