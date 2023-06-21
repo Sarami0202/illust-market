@@ -128,7 +128,7 @@ class IllustController extends Controller
 
     public function connectIllust($category, $num)
     {
-        return $this->JsonResponse(Illust_Category::leftJoinF('illusts', 'illusts.id', '=', 'illust__categories.illust')
+        return $this->JsonResponse(Illust_Category::leftJoin('illusts', 'illusts.id', '=', 'illust__categories.illust')
             ->Where('category', $category)
             ->orderBy('id', 'desc')
             ->limit($num)
