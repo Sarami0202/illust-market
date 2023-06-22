@@ -43,6 +43,9 @@ Route::get('/illust_download/{id?}', 'App\Http\Controllers\DownloadController@do
 Route::post('/download', 'App\Http\Controllers\DownloadController@store');
 Route::get('/download/{id?}', 'App\Http\Controllers\DownloadController@index');
 
+Route::post('/favorite', 'App\Http\Controllers\FavoriteController@InsertFavorite');
+Route::get('/favorite', 'App\Http\Controllers\FavoriteController@getFavorite');
+Route::delete('/favorite/{id?}', 'App\Http\Controllers\FavoriteController@destroy');
 
 Route::post('/aff', 'App\Http\Controllers\AffController@store');
 Route::get('/aff_info/{id?}', 'App\Http\Controllers\AffController@index');
