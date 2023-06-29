@@ -11,10 +11,10 @@ class dateController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($open, $close)
     {
-        return $this->JsonResponse(create_date::where('created_at', '>=', date("Y-m-d ", strtotime('-' . Carbon::now() . 'day')))
-            ->count());
+        return $this->JsonResponse(create_date::where('created_at', '>=', $open)->
+            where('created_at', '<=', $close)->count());
     }
     public function get()
     {
