@@ -23,6 +23,7 @@ Route::get('/illust_connect/{category?}/{num?}', 'App\Http\Controllers\IllustCon
 Route::delete('/illust/{id?}', 'App\Http\Controllers\IllustController@destroy');
 Route::get('/illust_new/{num?}', 'App\Http\Controllers\IllustController@newIllust');
 Route::get('/date', 'App\Http\Controllers\dateController@index');
+Route::get('/date_all', 'App\Http\Controllers\dateController@get');
 
 Route::get('/category/{id?}', 'App\Http\Controllers\CategoryController@index');
 Route::post('/category', 'App\Http\Controllers\CategoryController@store');

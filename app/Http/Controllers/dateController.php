@@ -16,7 +16,10 @@ class dateController extends Controller
         return $this->JsonResponse(create_date::where('created_at', '>=', date("Y-m-d ", strtotime('-' . Carbon::now() . 'day')))
             ->count());
     }
-
+    public function get()
+    {
+        return $this->JsonResponse(create_date::all());
+    }
     /**
      * Store a newly created resource in storage.
      */
